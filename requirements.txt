@@ -1,0 +1,27 @@
+# Core AI and LLM dependencies
+openai>=1.0.0
+langchain>=0.1.10,<0.2.0
+langchain-openai>=0.0.5
+langchain-core>=0.1.0
+
+# Basic CrewAI (without problematic tools)
+crewai>=0.28.8
+
+# Web interfaces
+streamlit>=1.29.0
+fastapi>=0.104.1
+uvicorn>=0.24.0
+
+# Data handling
+pandas>=2.1.4
+requests>=2.31.0
+pydantic>=2.5.0
+
+# Configuration
+python-dotenv>=1.0.0
+
+# Database
+psycopg2-binary>=2.9.0
+
+# Optional: Simplified tools (comment out if issues)
+# crewai-tools>=0.1.6

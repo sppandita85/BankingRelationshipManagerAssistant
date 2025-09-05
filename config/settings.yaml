@@ -1,0 +1,94 @@
+# Banking RM Agent Configuration
+
+# Application Settings
+app:
+  name: "Banking RM Agent"
+  version: "1.0.0"
+  debug: false
+  log_level: "INFO"
+
+# OpenAI Configuration
+openai:
+  model: "gpt-4"
+  temperature: 0.1
+  max_tokens: 1000
+  timeout: 30
+
+# Banking System Configuration
+banking:
+  api_base_url: "https://api.bankingsystem.com"
+  timeout: 30
+  retry_attempts: 3
+  mock_mode: true  # Set to false for production
+
+# Agent Configuration
+agents:
+  intent_classifier:
+    role: "Intent Classification Specialist"
+    goal: "Accurately classify customer banking queries into appropriate categories"
+    backstory: |
+      You are an expert banking customer service specialist with deep knowledge 
+      of banking operations and customer intent patterns. You excel at quickly identifying 
+      what customers are asking for and categorizing their queries appropriately.
+  
+  query_handler:
+    role: "Banking Customer Service Specialist"
+    goal: "Provide accurate and helpful responses to customer banking queries"
+    backstory: |
+      You are an experienced banking relationship manager with extensive 
+      knowledge of banking products, services, and customer needs. You excel at 
+      providing personalized, accurate, and timely responses to customer inquiries 
+      while maintaining a professional and empathetic tone.
+
+# Supported Intents
+supported_intents:
+  - "REMITTANCE_STATUS"
+  - "ACCOUNT_BALANCE"
+  - "TRANSACTION_HISTORY"
+  - "GENERAL_BANKING"
+
+# Intent Classification Prompt Template
+intent_classification_prompt: |
+  You are an expert intent classifier for banking customer service queries.
+  Classify the following customer query into one of these categories:
+  
+  1. REMITTANCE_STATUS - Query about remittance status, transfer status, or payment tracking
+  2. ACCOUNT_BALANCE - Query about account balance or funds
+  3. TRANSACTION_HISTORY - Query about past transactions
+  4. INVESTMENT_QUERY - Query about investments, portfolios, or financial products
+  5. LOAN_INQUIRY - Query about loans, credit, or borrowing
+  6. CARD_SERVICES - Query about debit/credit cards
+  7. GENERAL_BANKING - General banking questions
+  8. OUT_OF_SCOPE - Query is not related to banking services or is too complex
+  
+  Customer Query: {query}
+  
+  Respond with only the category name (e.g., REMITTANCE_STATUS).
+
+# Apology Message Template
+apology_message: |
+  I apologize, but I'm unable to assist with this particular query at the moment. 
+  As your Relationship Manager, I'll personally follow up with you to address this matter. 
+  Please expect a call from me within the next business day to ensure we provide you with the best possible service.
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "banking_rm_agent.log"
+  max_size: "10MB"
+  backup_count: 5
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  workers: 1
+
+# Streamlit Configuration
+streamlit:
+  host: "0.0.0.0"
+  port: 8501
+  theme: "light"
+  sidebar_state: "expanded"
