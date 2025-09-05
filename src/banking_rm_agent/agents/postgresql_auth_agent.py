@@ -5,6 +5,7 @@ Handles customer identity verification and access control using PostgreSQL datab
 import hashlib
 import jwt
 import logging
+import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import datetime, timedelta
@@ -60,12 +61,13 @@ class PostgreSQLAuthenticationAgent:
             db_config: Database configuration dictionary
         """
         self.db_config = db_config or {
-            'host': 'localhost',
-            'database': 'RMagent',
-            'user': 'sppandita85',
-            'port': '5432'
+            'host': os.getenv('DB_HOST', 'localhost'),
+            'database': os.getenv('DB_NAME', 'RMagent'),
+            'user': os.getenv('DB_USER', 'sppandita85'),
+            'password': os.getenv('DB_PASSWORD', ''),
+            'port': os.getenv('DB_PORT', '5432')
         }
-        self.secret_key = "banking_secret_key_2024"
+        self.secret_key = os.getenv('JWT_SECRET_KEY', 'banking_secret_key_2024')
         self.session_tokens = {}  # In production, use Redis or database
         
         # Test database connection

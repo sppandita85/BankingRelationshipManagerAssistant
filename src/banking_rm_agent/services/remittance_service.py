@@ -3,6 +3,7 @@ Remittance Service for Banking RM System.
 Handles remittance operations and status checking using PostgreSQL database.
 """
 import logging
+import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import datetime, timedelta
@@ -63,10 +64,11 @@ class RemittanceService:
             db_config: Database configuration dictionary
         """
         self.db_config = db_config or {
-            'host': 'localhost',
-            'database': 'RMagent',
-            'user': 'sppandita85',
-            'port': '5432'
+            'host': os.getenv('DB_HOST', 'localhost'),
+            'database': os.getenv('DB_NAME', 'RMagent'),
+            'user': os.getenv('DB_USER', 'sppandita85'),
+            'password': os.getenv('DB_PASSWORD', ''),
+            'port': os.getenv('DB_PORT', '5432')
         }
         
         # Test database connection
