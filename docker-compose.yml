@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: banking_rm_postgres
+    environment:
+      POSTGRES_DB: RMagent
+      POSTGRES_USER: banking_user
+      POSTGRES_PASSWORD: banking_password_2024
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    networks:
+      - banking_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U banking_user -d RMagent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Banking RM Agent Application
+  banking_rm_agent:
+    build: .
+    container_name: banking_rm_app
+    environment:
+      # Database Configuration
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: RMagent
+      DB_USER: banking_user
+      DB_PASSWORD: banking_password_2024
+      
+      # OpenAI Configuration (set your actual key)
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-your_openai_api_key_here}
+      
+      # JWT Secret
+      JWT_SECRET_KEY: banking_jwt_secret_2024_secure_key
+      
+      # Application Configuration
+      LOG_LEVEL: INFO
+      LOG_FILE: /app/logs/banking_rm_agent.log
+      
+      # Agent Configuration
+      AGENT_MODEL: gpt-4
+      TEMPERATURE: 0.1
+      MAX_TOKENS: 1000
+    ports:
+      - "8501:8501"  # Streamlit
+      - "8000:8000"  # FastAPI
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - banking_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  banking_network:
+    driver: bridge
